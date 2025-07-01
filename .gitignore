@@ -1,0 +1,11 @@
+
+# for front_end
+/front_end/.next 
+/front_end/node_modules
+/front_end/.env 
+/front_end/next-env.d.ts
+
+
+# for server 
+server/node_modules
+server/.env
