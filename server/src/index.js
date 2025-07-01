@@ -1,11 +1,11 @@
 import express from "express"
 import cors from 'cors'
 import handlerLogic from "./routes/handler-logic.js";
-import 'dotenv/config'
+import 'dotenv/config';
 import checkAuthantication from "../lib/check-authantication.js";
 
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 const corsOptions={};
 
 function startEngin() {

@@ -58,7 +58,7 @@ router.post('/st-downloading', async function (request, response) {
             return response.status(400).json({ msg: 'credentials are missing' });
         }
 
-        const required_stream=['best','bestaudio','bestvideo'];
+        const required_stream=['best','bestaudio','bestvideo','bestvideo+bestaudio'];
 
         if(!required_stream.includes(stream_type)) {
             return response.status(400).json({msg:'invalid streaming type!'});
