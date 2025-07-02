@@ -7,7 +7,7 @@ async function Download() {
     let link,video_title,format; // only if getlink != undefined // 
     
     if(getLink) {
-       let val = JSON.parse(getLink.value);
+       const val = JSON.parse(getLink.value);
        link=val.link;
        video_title = val.video_title;
        format=val.format;
