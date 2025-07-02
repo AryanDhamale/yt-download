@@ -1,14 +1,20 @@
 import { cookies } from "next/headers";
 import DownloadCon from "@/component/download-com/download-com";
 
-async function Download({ params }: any) {
-    const { format } = await params;
-    const CookieStore = await cookies();
-    const getLink = CookieStore.get('video_url');
+async function Download() {
+    const CookieStore = await cookies(); // clear only in server action or route handlers // 
+    const getLink = CookieStore.get('meta_data');
+    let link,video_title,format; // only if getlink != undefined // 
+    
+    if(getLink) {
+       let val = JSON.parse(getLink.value);
+       link=val.link;
+       video_title = val.video_title;
+       format=val.format;
+    }
 
-    const { link , video_title} = getLink && JSON.parse(getLink.value);
 
-    if (!link || !format) {
+    if (!link || !video_title || !format) {
         return (
             <div className="w-full h-[80vh] text-slate-700 drop-shadow-lg font-medium flex flex-col items-center justify-center gap-y-5">
                 <h1 className="text-xl">404 - Unauthorized!</h1>

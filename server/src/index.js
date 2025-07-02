@@ -30,14 +30,25 @@ function startEngin() {
         // meta data or st-downloading  // 
 
         app.use('/api',handlerLogic);
-        
 
+
+        // catch all routes // 
+        //app.all('/*',function(err,request,response,next){})
+
+        // error handling // 
+        app.use((error,request,response,next)=>{
+            const {status=503,message='something went wrong!'} = error ;
+            return response.status(status).json({error:message});
+        })
+
+        
         app.listen(PORT, () => {
             console.log(`start listening at portno. ${PORT}`);
         })
     }
     catch (err) {
-        console.log(err);
+        console.log({msg:err.message,err});
+        process.exit(1); // terminate the application here // 
     }
 }
 

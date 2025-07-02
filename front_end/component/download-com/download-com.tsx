@@ -1,5 +1,6 @@
 "use client"
 import { useState } from "react";
+import Link from "next/link";
 
 function DownloadCon({ video_url, video_title, stream_type }: { video_url: string, video_title: string, stream_type: string }) {
     const [error,setError]=useState<string>('');
@@ -8,13 +9,15 @@ function DownloadCon({ video_url, video_title, stream_type }: { video_url: strin
     async function st_downloading(): Promise<void> {
         try {
             setisLoading(()=>true);
-            const st_url = 'http://localhost:8080/api/st-downloading';
+            const st_url = process.env.NODE_ENV=='development' ? 'http://localhost:8080/api/st-downloading' :  (process.env.NEXT_PUBLIC_SERVER_URL+'api/st-downloading');
+            const to_be_format = stream_type == 'bestaudio' ? 'bestaudio' : `bestvideo[height<=${stream_type}]`;
+            console.log(to_be_format);
             const fetchOptions = {
                 method: 'POST',
-                body: JSON.stringify({ video_url, stream_type, video_title }),
+                body: JSON.stringify({ video_url, stream_type : to_be_format }),
                 headers: {
                     'content-type': 'application/json',
-                    'x-api-key': '12345678'
+                    'x-api-key': process.env.NEXT_PUBLIC_X_API_KEY!,
                 }
             }
 
@@ -29,9 +32,6 @@ function DownloadCon({ video_url, video_title, stream_type }: { video_url: strin
             const downloadUrl = window.URL.createObjectURL(blob);
 
             const a = document.createElement('a');
-
-            // const content_disposition = response.headers.get('Content-Disposition');
-            // const match = content_disposition?.match(/filename="(.+)"/);
             
             const fileName = video_title+(stream_type=='bestaudio' ? '.mp3' : '.mp4' ) ;
             a.href=downloadUrl;
@@ -58,6 +58,7 @@ function DownloadCon({ video_url, video_title, stream_type }: { video_url: strin
             <button disabled={isLoading} onClick={st_downloading} className={`py-3 px-4 ${isLoading ? 'bg-slate-700/50' : 'bg-slate-700'} text-white rounded-md`}>{isLoading ? 'downloading...' : 'start Downloading'}</button>
             <h2>hope you will enjoy it! &#128513;</h2>
             <h1 className="text-red-500">{error}</h1>
+            <h1>You may feel this is too slow because to merging bestvideo+bestaudio via <Link href={'https://ffmpeg.org/download.html'}><span className="text-red-500">FFmpeg</span></Link> and also deployment service, In my case i used <Link href={'https://render.com/'}><span className="text-red-500">Render.com</span></Link></h1>
         </div>
     );
 }
